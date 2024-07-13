@@ -1,0 +1,264 @@
+/*
+------------------------------------------------------------------
+  Title: Text Based RPG - Name pending
+  Creators: NAMES HERE
+  Description:
+    You are on a mission to escape by rescuing a copilot
+    and repair the spaceship's engines. Gameplay includes
+    enemy combat, navigate through different rooms,
+    encounter challenges, and solve puzzles to succeed.
+
+    Rooms:
+    - Medical Bay: Starting point with supplies.
+    - Sleeping Quarters: Find the copilot.
+    - Storage Room: Encounter a space pirate.
+    - Engine Room: Solve a puzzle to fix the engines.
+    - Cockpit: Check mission success conditions.
+
+    Game Mechanics:
+    - Movement: Choose options to move between rooms.
+    - Combat: Dice rolls determine outcomes against enemies.
+    - Puzzle: Solve puzzles to progress. WIP
+    - Success: Check if copilot is safe and engines are fixed.
+-------------------------------------------------------------------
+*/
+
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <string>
+#include <cstdlib>
+#include <ctime>
+
+using namespace std;
+
+// Function to read text from a file
+// Takes a filename as an argument and returns the file's content as a string
+string readFromFile(const string& filename)
+{
+    ifstream file(filename);
+    if (!file)
+    {
+        cerr << "Error: Could not open file " << filename << endl;
+        return "";
+    }
+    ostringstream content;
+    content << file.rdbuf();
+    file.close();
+    return content.str();
+}
+
+// Function to wait for any key press
+// Pauses the game until the player presses a key
+void waitForKeyPress()
+{
+    cout << "Press any key to roll the dice...\n";
+    cin.ignore();
+    cin.get();
+}
+
+// Class for the Copilot
+class Copilot
+{
+public:
+    bool obtained; // Indicates if the copilot has been found
+    bool injured;  // Indicates if the copilot is injured
+
+    // Constructor to initialize copilot state
+    Copilot() : obtained(false), injured(false) {}
+};
+
+// Base class for a Room
+class Room
+{
+public:
+    // Virtual function to be implemented by derived room classes
+    virtual void enter(Copilot& copilot, bool& enginesOn, bool& hasTool) = 0;
+};
+
+// Class for the Cockpit
+class Cockpit : public Room
+{
+public:
+    // Function to handle entering the cockpit
+    void enter(Copilot& copilot, bool& enginesOn, bool& hasTool) override
+    {
+        cout << readFromFile("cockpit.txt");
+        if (copilot.obtained && !copilot.injured && enginesOn)
+        {
+            cout << readFromFile("cockpit_success.txt");
+            exit(0); // End game if success conditions are met
+        }
+        else
+        {
+            cout << readFromFile("cockpit_fail.txt");
+        }
+    }
+};
+
+// Class for the Sleeping Quarters
+class SleepingQuarters : public Room
+{
+public:
+    // Function to handle entering the sleeping quarters
+    void enter(Copilot& copilot, bool& enginesOn, bool& hasTool) override
+    {
+        cout << readFromFile("sleeping_quarters.txt");
+        if (!copilot.obtained)
+        {
+            cout << readFromFile("copilot_found.txt");
+            copilot.obtained = true; // Mark copilot as found
+        }
+        else
+        {
+            cout << readFromFile("copilot_already_with_you.txt");
+        }
+    }
+};
+
+// Class for the Medical Bay
+class MedicalBay : public Room
+{
+public:
+    // Function to handle entering the medical bay
+    void enter(Copilot& copilot, bool& enginesOn, bool& hasTool) override
+    {
+        cout << readFromFile("medical_bay.txt");
+        if (copilot.obtained && copilot.injured)
+        {
+            cout << readFromFile("copilot_healed.txt");
+            copilot.injured = false; // Heal the copilot
+        }
+        else
+        {
+            cout << readFromFile("nothing_to_do.txt");
+        }
+    }
+};
+
+// Class for the Storage Room
+class StorageRoom : public Room
+{
+public:
+    // Function to handle entering the storage room
+    void enter(Copilot& copilot, bool& enginesOn, bool& hasTool) override
+    {
+        if (!copilot.obtained)
+        {
+            cout << readFromFile("storage_locked.txt");
+            return; // Prevent entry if copilot is not found
+        }
+
+        cout << readFromFile("storage_room.txt");
+        cout << readFromFile("enemy_appears.txt");
+
+        int totalRoll = 0;
+        for (int i = 0; i < 3; ++i)
+        {
+            waitForKeyPress();
+            int roll = rand() % 20 + 1;
+            cout << "You rolled a " << roll << ".\n";
+            totalRoll += roll;
+        }
+
+        if (totalRoll >= 40)
+        {
+            cout << readFromFile("enemy_defeated.txt");
+        }
+        else
+        {
+            cout << readFromFile("copilot_injured.txt");
+            copilot.injured = true; // Mark copilot as injured
+        }
+
+        cout << readFromFile("tool_found.txt");
+        hasTool = true; // Mark tool as found
+    }
+};
+
+// Class for the Engine Room
+class EngineRoom : public Room
+{
+public:
+    // Function to handle entering the engine room
+    void enter(Copilot& copilot, bool& enginesOn, bool& hasTool) override
+    {
+        cout << readFromFile("engine_room.txt");
+        if (!hasTool)
+        {
+            cout << readFromFile("need_tool.txt");
+            return; // Prevent puzzle solving if tool is not found
+        }
+
+        cout << readFromFile("solving_puzzle.txt");
+        // Simple puzzle simulation
+        cout << readFromFile("puzzle_solved.txt");
+        enginesOn = true; // Mark engines as fixed
+    }
+};
+
+int main()
+{
+    // Initialize game state
+    Copilot copilot; // Create an instance of Copilot
+    bool enginesOn = false; // Track if engines are fixed
+    bool hasTool = false; // Track if the player has the tool
+
+    // Initialize room objects
+    Cockpit cockpit;
+    SleepingQuarters sleepingQuarters;
+    MedicalBay medicalBay;
+    StorageRoom storageRoom;
+    EngineRoom engineRoom;
+
+    srand(static_cast<unsigned int>(time(0))); // Seed the random number generator
+
+    // Display welcome message and introduction
+    cout << "Welcome to the Untitled RPG game!\n";
+    cout << readFromFile("introduction.txt");
+
+    // Main game loop
+    while (true)
+    {
+        // Display room options
+        cout << "Choose an option:\n";
+        cout << "A. Go to Cockpit\n";
+        cout << "B. Go to Sleeping Quarters\n";
+        cout << "C. Go to Medical Bay\n";
+        cout << "D. Go to Storage Room\n";
+        cout << "E. Go to Engine Room\n";
+
+        // Get player's choice
+        char choice;
+        cout << "\nWhere would you like to go?: ";
+        cin >> choice;
+
+        // Handle room entry based on player's choice
+        switch (choice)
+        {
+            case 'A':
+            case 'a':
+                cockpit.enter(copilot, enginesOn, hasTool);
+                break;
+            case 'B':
+            case 'b':
+                sleepingQuarters.enter(copilot, enginesOn, hasTool);
+                break;
+            case 'C':
+            case 'c':
+                medicalBay.enter(copilot, enginesOn, hasTool);
+                break;
+            case 'D':
+            case 'd':
+                storageRoom.enter(copilot, enginesOn, hasTool);
+                break;
+            case 'E':
+            case 'e':
+                engineRoom.enter(copilot, enginesOn, hasTool);
+                break;
+            default:
+                cout << "Invalid choice. Please try again.\n";
+        }
+    }
+    return 0;
+}
