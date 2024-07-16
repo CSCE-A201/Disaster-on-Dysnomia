@@ -57,6 +57,42 @@ void waitForKeyPress()
     cin.get();
 }
 
+//Class for the player
+enum location {ENGINE_ROOM, HALLWAY, COCKPIT, STORAGE, MEDICAL_BAY, SLEEPING_QUARTERS};
+
+class Player {
+    public:
+        bool get_key() const {
+            return key;
+        }
+        void set_key(bool val) {
+            key = val;
+        }
+        bool get_enginePiece() const {
+            return enginePiece;
+        }
+        void set_enginePiece(bool val) {
+            enginePiece = val;
+        }
+        location get_location() const {
+            return playerLocation;
+        }
+        void set_location(location val) {
+            playerLocation = val;
+        }
+        string get_name() const {
+            return name;
+        }
+        void set_name(string val) {
+            name = val;
+        }
+    private:
+        bool key = false; //indicate if player has key from copilot
+        bool enginePiece = false; //indicate if player has engine piece from storage
+        location playerLocation; track player location
+        string name; //name if we want to implement
+};
+
 // Class for the Copilot
 class Copilot
 {
@@ -73,7 +109,7 @@ class Room
 {
 public:
     // Virtual function to be implemented by derived room classes
-    virtual void enter(Copilot& copilot, bool& enginesOn, bool& hasTool) = 0;
+    virtual void enter(Copilot& copilot, EngineRoom& engineRoom, Player& player) = 0;
 };
 
 // Class for the Cockpit
@@ -81,10 +117,10 @@ class Cockpit : public Room
 {
 public:
     // Function to handle entering the cockpit
-    void enter(Copilot& copilot, bool& enginesOn, bool& hasTool) override
+    void enter(Copilot& copilot, EngineRoom& engineRoom, Player& player) override
     {
         cout << readFromFile("cockpit.txt");
-        if (copilot.obtained && !copilot.injured && enginesOn)
+        if (copilot.obtained && !copilot.injured && engineRoom.get_enginesOn())
         {
             cout << readFromFile("cockpit_success.txt");
             exit(0); // End game if success conditions are met
@@ -101,7 +137,7 @@ class SleepingQuarters : public Room
 {
 public:
     // Function to handle entering the sleeping quarters
-    void enter(Copilot& copilot, bool& enginesOn, bool& hasTool) override
+    void enter(Copilot& copilot, EngineRoom& engineRoom, Player& player) override
     {
         cout << readFromFile("sleeping_quarters.txt");
         if (!copilot.obtained)
@@ -121,7 +157,7 @@ class MedicalBay : public Room
 {
 public:
     // Function to handle entering the medical bay
-    void enter(Copilot& copilot, bool& enginesOn, bool& hasTool) override
+    void enter(Copilot& copilot, EngineRoom& engineRoom, Player& player) override
     {
         cout << readFromFile("medical_bay.txt");
         if (copilot.obtained && copilot.injured)
@@ -141,7 +177,7 @@ class StorageRoom : public Room
 {
 public:
     // Function to handle entering the storage room
-    void enter(Copilot& copilot, bool& enginesOn, bool& hasTool) override
+    void enter(Copilot& copilot, EngineRoom& engineRoom, Player& player) override
     {
         if (!copilot.obtained)
         {
@@ -172,7 +208,7 @@ public:
         }
 
         cout << readFromFile("tool_found.txt");
-        hasTool = true; // Mark tool as found
+        player.set_enginePiece(true); // Mark tool as found
     }
 };
 
@@ -181,10 +217,10 @@ class EngineRoom : public Room
 {
 public:
     // Function to handle entering the engine room
-    void enter(Copilot& copilot, bool& enginesOn, bool& hasTool) override
+    void enter(Copilot& copilot, Player& player) override
     {
         cout << readFromFile("engine_room.txt");
-        if (!hasTool)
+        if (!player)
         {
             cout << readFromFile("need_tool.txt");
             return; // Prevent puzzle solving if tool is not found
@@ -195,14 +231,41 @@ public:
         cout << readFromFile("puzzle_solved.txt");
         enginesOn = true; // Mark engines as fixed
     }
+
+    bool get_enginesOn() {
+        return enginesOn;
+    }
+
+private:
+    bool enginesOn; //track if engines are on
+};
+
+class Hallway {
+	public:
+		void Hallway::move() {
+            cout << "Choose an option:\n";
+            cout << "A. Go to Cockpit\n";
+            cout << "B. Go to Sleeping Quarters\n";
+            cout << "C. Go to Medical Bay\n";
+            cout << "D. Go to Storage Room\n";
+            cout << "E. Go to Engine Room\n";
+
+            cout << "\nWhere would you like to go?: ";
+            cin >> choice;
+        };
+
+        char getChoice() const {
+            return choice;
+        };
+	
+	private:
+		char choice;
 };
 
 int main()
 {
     // Initialize game state
     Copilot copilot; // Create an instance of Copilot
-    bool enginesOn = false; // Track if engines are fixed
-    bool hasTool = false; // Track if the player has the tool
 
     // Initialize room objects
     Cockpit cockpit;
@@ -210,6 +273,8 @@ int main()
     MedicalBay medicalBay;
     StorageRoom storageRoom;
     EngineRoom engineRoom;
+    Hallway hallway;
+    Player player;
 
     srand(static_cast<unsigned int>(time(0))); // Seed the random number generator
 
@@ -220,41 +285,35 @@ int main()
     // Main game loop
     while (true)
     {
-        // Display room options
-        cout << "Choose an option:\n";
-        cout << "A. Go to Cockpit\n";
-        cout << "B. Go to Sleeping Quarters\n";
-        cout << "C. Go to Medical Bay\n";
-        cout << "D. Go to Storage Room\n";
-        cout << "E. Go to Engine Room\n";
-
-        // Get player's choice
-        char choice;
-        cout << "\nWhere would you like to go?: ";
-        cin >> choice;
+        hallway.move();
 
         // Handle room entry based on player's choice
-        switch (choice)
+        switch (hallway.getChoice())
         {
             case 'A':
             case 'a':
-                cockpit.enter(copilot, enginesOn, hasTool);
+                player.playerLocation(COCKPIT);
+                cockpit.enter(copilot, engineRoom, player);
                 break;
             case 'B':
             case 'b':
-                sleepingQuarters.enter(copilot, enginesOn, hasTool);
+                player.playerLocation(SLEEPING_QUARTERS);
+                sleepingQuarters.enter(copilot, engineRoom, player);
                 break;
             case 'C':
             case 'c':
-                medicalBay.enter(copilot, enginesOn, hasTool);
+                player.playerLocation(medicalBay);
+                medicalBay.enter(copilot, engineRoom, player);
                 break;
             case 'D':
             case 'd':
-                storageRoom.enter(copilot, enginesOn, hasTool);
+                player.playerLocation(STORAGE);
+                storageRoom.enter(copilot, engineRoom, player);
                 break;
             case 'E':
             case 'e':
-                engineRoom.enter(copilot, enginesOn, hasTool);
+                player.playerLocation(ENGINE_ROOM);
+                engineRoom.enter(copilot, player);
                 break;
             default:
                 cout << "Invalid choice. Please try again.\n";
