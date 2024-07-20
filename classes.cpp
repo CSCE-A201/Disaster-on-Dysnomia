@@ -39,8 +39,9 @@ enum location {ENGINE_ROOM, HALLWAY, COCKPIT, STORAGE, MEDICAL_BAY, SLEEPING_QUA
 class Player {
     public:
         //Constructor
-        Player(bool key = false, bool enginePiece = false, location playerLocation = HALLWAY) {
+        Player(bool key = false, bool cabinetKey = false, bool enginePiece = false, location playerLocation = HALLWAY) {
             key = key;
+	    cabinetKey = cabinetKey;
             enginePiece = enginePiece;
             playerLocation = playerLocation;
         }
@@ -53,6 +54,16 @@ class Player {
         //change value of key variable
         void set_key(bool val) {
             key = val;
+        }
+
+	// Return value of cabinet key variable
+        bool hasCabinetKey() const {
+            return cabinetKey;
+        }
+
+        // Change value of cabinet key variable
+        void setCabinetKey(bool val) {
+            cabinetKey = val;
         }
 
         //return value of engine piece variable
@@ -237,13 +248,115 @@ class SleepingQuarters {
     private:
 };
 
-class MedicalBay {
-    public:
-        void enter(Copilot &copilot, EngineRoom &engineRoom, Player &player) {
-                cout << "In the medical bay" << endl;
-            }
+//Class for Medical Bay - Jared
+class MedicalBay
+{
+public:
+    void enter(Copilot &copilot, EngineRoom &engineRoom, Player &player)
+    {
+        cout << readFromFile("medical_bay.txt") << endl; // intro to medical bay
 
-    private:
+        int choice;
+        do {
+            displayChoices();
+            cin >> choice;
+            cout << endl;
+
+            handleChoice(choice, copilot, player);
+        } while (choice != 4); // Continue until the player chooses to enter the hallway
+    }
+
+private:
+    const int deskCode = 3575; // Code for desk to find key for the cabinet
+
+    void displayChoices() const
+    {
+        cout << "You are in the Medical Bay. What would you like to do?" << endl;
+        cout << "1. Look inside the medical cabinets" << endl;
+        cout << "2. Inspect the medical equipment" << endl;
+        cout << "3. Inspect office desk" << endl;
+        cout << "4. Enter Hallway" << endl;
+        cout << "Enter your choice (1-4): ";
+    }
+
+    void handleChoice(int choice, Copilot &copilot, Player &player)
+    {
+        switch (choice)
+        {
+            case 1:
+                handleCabinet(copilot, player); // medical supplies for copilot, needs key
+                break;
+            case 2:
+                cout << readFromFile("mb_equipment_nothing.txt") << endl; // no important gameplay mechanics
+                break;
+            case 3:
+                handleDesk(player); // where key is found, requires code
+                break;
+            case 4:
+                cout << "You leave the medical bay and enter into the main hallway." << endl; // enter hallway
+                break;
+            default:
+                cout << "Invalid choice. Please choose a valid option." << endl;
+                break;
+        }
+    }
+
+    // Function for cabinet
+    void handleCabinet(Copilot &copilot, Player &player)
+    {
+        if (player.hasCabinetKey()) // checks if player has key
+        {
+            if (copilot.obtained && copilot.injured) // checks if copilot is injured
+            {
+                cout << readFromFile("mb_cabinet_heal.txt") << endl;
+                copilot.injured = false; // Heal the copilot
+            }
+            else
+            {
+                cout << readFromFile("mb_cabinet_locked.txt") << endl;
+            }
+        }
+        else
+        {
+            cout << readFromFile("mb_cabinet_nothing_locked.txt") << endl;
+        }
+    }
+
+    void handleDesk(Player &player)
+    {
+        int userCode;
+        char knowCode;
+
+        cout << readFromFile("mb_desk.txt") << endl; // Display desk info
+
+        cout << "Do you know the 4-digit code? (Y/N): ";
+        cin >> knowCode;
+        cout << endl;
+
+        if (knowCode == 'Y' || knowCode == 'y')
+        {
+            cout << "Enter 4-digit code to unlock the desk drawer: ";
+            cin >> userCode;
+
+            if (userCode == deskCode)
+            {
+                cout << readFromFile("mb_desk_unlock.txt") << endl;
+                player.setCabinetKey(true); // Player finds the cabinet key
+            }
+            else
+            {
+                cout << "Invalid Code. The desk drawer remains locked.\n" << endl;
+            }
+        }
+        else if (knowCode == 'N' || knowCode == 'n')
+        {
+            cout << readFromFile("mb_leave_desk.txt") << endl;
+        }
+        else
+        {
+            cout << "Invalid Input. Please enter Y or N.\n" << endl;
+        }
+    }
 };
 
 class StorageRoom {
