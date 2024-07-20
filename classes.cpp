@@ -41,7 +41,7 @@ class Player {
         //Constructor
         Player(bool key = false, bool cabinetKey = false, bool enginePiece = false, location playerLocation = HALLWAY) {
             key = key;
-	    cabinetKey = cabinetKey;
+	        cabinetKey = cabinetKey;
             enginePiece = enginePiece;
             playerLocation = playerLocation;
         }
@@ -56,7 +56,7 @@ class Player {
             key = val;
         }
 
-	// Return value of cabinet key variable
+	    // Return value of cabinet key variable
         bool hasCabinetKey() const {
             return cabinetKey;
         }
@@ -88,6 +88,7 @@ class Player {
     private:
         bool key;
         bool enginePiece;
+        bool cabinetKey;
         location playerLocation;
 };
 
@@ -231,7 +232,9 @@ class EngineRoom {
 class Cockpit {
     public:
         void enter(Copilot &copilot, EngineRoom &engineRoom, Player &player) {
-            cout << "In the cockpit" << endl;
+            if (!player.get_key()) {
+                readFromFile("cockpitLocked.txt");
+            }
         }
 
 
