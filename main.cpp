@@ -19,6 +19,9 @@ int main() {
     cout << "Welcome to the Untitled RPG game!\n";
     cout << readFromFile("introduction.txt");
 
+    // Start the game in the Medical Bay
+    medicalBay.enter(copilot, engineRoom, player);
+
     // Main game loop
     while (true)
     {
