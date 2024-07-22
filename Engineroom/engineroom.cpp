@@ -22,12 +22,19 @@ string readFromFile(const string& filename)
     return content;
 }
 
+// Class for the Player
+class Player
+{
+public:
+    bool enginePiece = false; // Initially player doesn't have the engine piece
+};
+
 // Class for the Engine Room
 class EngineRoom
 {
 public:
     // Function to handle entering the engine room
-    void enter()
+    void enter(Player& player)
     {
         cout << readFromFile("engineroom_entry.txt") << endl;
 
@@ -43,7 +50,7 @@ public:
             switch (choice)
             {
             case 1:
-                lookAtEngine();
+                lookAtEngine(player);
                 break;
             case 2:
                 cout << readFromFile("engineroom_leave.txt") << endl;
@@ -55,10 +62,8 @@ public:
     }
 
 private:
-    bool enginePiece = false; // Assuming initially player doesn't have engine piece
-
     // Function to handle looking at the engine
-    void lookAtEngine()
+    void lookAtEngine(Player& player)
     {
         cout << readFromFile("engineroom_lookatengine.txt") << endl;
 
@@ -75,7 +80,7 @@ private:
             switch (choice)
             {
             case 1:
-                if (!enginePiece)
+                if (!player.enginePiece)
                 {
                     cout << "\n"; // Add a blank line
                     cout << readFromFile("engineroom_engineoff.txt") << endl;
@@ -125,11 +130,11 @@ int main()
 {
     srand(static_cast<unsigned int>(time(0))); // Seed the random number generator
 
+    Player player;
     EngineRoom engineRoom;
 
     // Player enters the engine room
-    engineRoom.enter();
+    engineRoom.enter(player);
 
     return 0;
 }
-
