@@ -87,6 +87,7 @@ class Player {
         }
     private:
         bool key;
+	bool cabinetKey;
         bool enginePiece;
         location playerLocation;
 };
@@ -239,13 +240,113 @@ class Cockpit {
 
 };
 
+// Class for Sleeping Quarters - Jared
 class SleepingQuarters {
-    public:
-        void enter(Copilot &copilot, EngineRoom &engineRoom, Player &player) {
-            cout << "In the sleeping quarters" << endl;
-        }
+public:
+    void enter(Copilot &copilot, EngineRoom &engineRoom, Player &player) {
+        cout << readFromFile("sleeping_quarters_intro.txt") << endl;
 
-    private:
+        int choice;
+        do {
+            displayChoices();
+            cin >> choice;
+            cout << endl;
+
+            handleChoice(choice, copilot, player);
+        } while (choice != 4); // Continue until the player chooses to leave the room
+    }
+
+private:
+    // Display options for sleeping quarters
+    void displayChoices() const {
+        cout << "You are in the Sleeping Quarters. What would you like to do?" << endl;
+        cout << "1. Search the room" << endl;
+        cout << "2. Search the lockers" << endl;
+        cout << "3. Search scattered belongings" << endl;
+        cout << "4. Enter Hallway" << endl;
+        cout << "Enter your choice (1-4): ";
+    }
+    
+    // Handle options within sleeping quarters
+    void handleChoice(int choice, Copilot &copilot, Player &player) {
+        switch (choice) {
+            case 1:
+                searchRoom(copilot, player);
+                break;
+            case 2:
+                searchLockers();
+                break;
+            case 3:
+                searchBelongings(copilot, player);
+                break;
+            case 4:
+                cout << "You leave the sleeping quarters and enter into the main hallway." << endl;
+                break;
+            default:
+                cout << "Invalid choice. Please choose a valid option." << endl;
+                break;
+        }
+    }
+
+    // Search room function for copilot
+    void searchRoom(Copilot &copilot, Player &player) {
+        cout << readFromFile("sq_search.txt") << endl;
+
+        if (!copilot.obtained) {
+            cout << readFromFile("sq_found_copilot.txt") << endl;
+            copilot.obtained = true; // The copilot is now found
+            displayDialogOptions(copilot);
+        } else {
+            cout << readFromFile("sq_no_copilot.txt") << endl; // If player returns and copilot is already found
+        }
+    }
+
+    void searchLockers() const {
+        cout << readFromFile("sq_lockers.txt") << endl;
+    }
+
+    void searchBelongings(Copilot &copilot, Player &player) {
+        cout << readFromFile("sq_belongings.txt") << endl;
+    }
+
+    // Dialog options with copilot
+    void displayDialogOptions(Copilot &copilot) const {
+        int dialogChoice;
+        do {
+            cout << "What would you like to ask?" << endl;
+            cout << "1. What happened to the ship?" << endl;
+            cout << "2. Where did everybody go?" << endl;
+            cout << "3. What should we do next?" << endl;
+            cout << "4. How did you end up in the sleeping quarters?" << endl;
+            cout << "5. Leave the conversation" << endl;
+            cin >> dialogChoice;
+            cout << endl;
+
+            if (dialogChoice != 5) {
+                handleDialogChoice(dialogChoice);
+            }
+        } while (dialogChoice != 5); // Continue until the player chooses to leave
+    }
+
+    void handleDialogChoice(int choice) const {
+        switch (choice) {
+            case 1:
+                cout << readFromFile("sq_dialog_ship.txt") << endl;
+                break;
+            case 2:
+                cout << readFromFile("sq_dialog_everybody.txt") << endl;
+                break;
+            case 3:
+                cout << readFromFile("sq_dialog_next.txt") << endl;
+                break;
+            case 4:
+                cout << readFromFile("sq_dialog_copilot_background.txt") << endl;
+                break;
+            default:
+                cout << "Invalid choice. Please choose a valid option." << endl;
+                break;
+        }
+    }
 };
 
 //Class for Medical Bay - Jared
