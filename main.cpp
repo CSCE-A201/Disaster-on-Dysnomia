@@ -22,6 +22,12 @@ int main() {
     // Start the game in the Medical Bay
     medicalBay.enter(copilot, engineRoom, player);
 
+    //test cases - Thatcher
+    engineRoom.on = true;
+    copilot.injured = false;
+    copilot.obtained = true;
+    player.set_key(true);
+
     // Main game loop
     while (true)
     {
