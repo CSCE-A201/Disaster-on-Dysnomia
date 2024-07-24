@@ -4,6 +4,8 @@
 #include <string>
 #include <cstdlib>
 #include <ctime>
+#include <stdio.h>
+#include <direct.h>
 using namespace std;
 
 // Function to read text from a file
@@ -36,60 +38,47 @@ enum location {ENGINE_ROOM, HALLWAY, COCKPIT, STORAGE, MEDICAL_BAY, SLEEPING_QUA
 
 //Class for player - Thatcher
 class Player {
-    public:
-        //Constructor
-        Player(bool key = false, bool cabinetKey = false, bool enginePiece = false, location playerLocation = HALLWAY) {
-            key = key;
-	        cabinetKey = cabinetKey;
-            enginePiece = enginePiece;
-            playerLocation = playerLocation;
-        }
+public:
+    //Constructor
+    Player(bool cabinetKey = false, bool enginePiece = false, location playerLocation = HALLWAY) {
+        cabinetKey = cabinetKey;
+        enginePiece = enginePiece;
+        playerLocation = playerLocation;
+    }
 
-        //return value of key variable
-        bool get_key() const {
-            return key;
-        }
+    // Return value of cabinet key variable
+    bool hasCabinetKey() const {
+        return cabinetKey;
+    }
 
-        //change value of key variable
-        void set_key(bool val) {
-            key = val;
-        }
+    // Change value of cabinet key variable
+    void setCabinetKey(bool val) {
+        cabinetKey = val;
+    }
 
-	    // Return value of cabinet key variable
-        bool hasCabinetKey() const {
-            return cabinetKey;
-        }
+    //return value of engine piece variable
+    bool get_enginePiece() const {
+        return enginePiece;
+    }
 
-        // Change value of cabinet key variable
-        void setCabinetKey(bool val) {
-            cabinetKey = val;
-        }
+    //change value of engine piece variable
+    void set_enginePiece(bool val) {
+        enginePiece = val;
+    }
 
-        //return value of engine piece variable
-        bool get_enginePiece() const {
-            return enginePiece;
-        }
+    //return value of player location variable
+    location get_location() const {
+        return playerLocation;
+    }
 
-        //change value of engine piece variable
-        void set_enginePiece(bool val) {
-            enginePiece = val;
-        }
-
-        //return value of player location variable
-        location get_location() const {
-            return playerLocation;
-        }
-
-        //change value of player location variable
-        void set_location(location val) {
-            playerLocation = val;
-        }
-    private:
-        bool key;
-	bool cabinetKey;
-        bool enginePiece;
-        bool cabinetKey;
-        location playerLocation;
+    //change value of player location variable
+    void set_location(location val) {
+        playerLocation = val;
+    }
+private:
+    bool cabinetKey;
+    bool enginePiece;
+    location playerLocation;
 };
 
 //Class for Hallway - Thatcher
@@ -122,123 +111,122 @@ class Hallway {
 
 //Class for copilot - Jared
 class Copilot {
-    public:
-        bool obtained; // Indicates if the copilot has been found
-        bool injured;  // Indicates if the copilot is injured
+public:
+    bool obtained; // Indicates if the copilot has been found
+    bool injured;  // Indicates if the copilot is injured
 
-        // Constructor to initialize copilot state
-        Copilot() : obtained(false), injured(false) {}
+    // Constructor to initialize copilot state
+    Copilot() : obtained(false), injured(false) {}
 };
 
 // Class for the Engine Room - Austin
 class EngineRoom {
-    public:
+public:
+    bool on;
 
-        //temp var for engine on
-        bool on;
-    
-        // Function to handle entering the engine room
-        void enter(Copilot &copilot, Player &player) //added arguments as values from these classes should be checked
-        {
-            cout << readFromFile("engineroom_entry.txt") << endl;
+    EngineRoom() : on(false) {};
 
-            int choice;
-            do {
-                cout << "Choose an option:\n";
-                cout << "1. Look at the engine\n";
-                cout << "2. Leave the room\n";
-                cout << "Enter your choice: ";
-                cin >> choice;
-                cout << "\n"; // Add a blank line after input
+    // Function to handle entering the engine room
+    void enter(Player &player) //added arguments as values from these classes should be checked
+    {
+        cout << readFromFile("engineroom_entry.txt") << endl;
 
-                switch (choice)
+        int choice;
+        do {
+            cout << "Choose an option:\n";
+            cout << "1. Look at the engine\n";
+            cout << "2. Leave the room\n";
+            cout << "Enter your choice: ";
+            cin >> choice;
+            cout << "\n"; // Add a blank line after input
+
+            switch (choice)
+            {
+            case 1:
+                lookAtEngine(player);
+                break;
+            case 2:
+                system("cls"); 
+                cout << readFromFile("engineroom_leave.txt") << endl;
+                return;
+            default:
+                cout << "Invalid choice. Please try again.\n\n"; // Double newline for clarity
+            }
+        } while (choice != 2);
+    }
+
+private:
+    bool enginePiece = false; // Assuming initially player doesn't have engine piece
+
+    // Function to handle looking at the engine
+    void lookAtEngine(Player &player)
+    {
+        cout << readFromFile("engineroom_lookatengine.txt") << endl;
+
+        int choice;
+        do {
+            cout << "\n"; // Add a blank line
+            cout << "Choose an option:\n";
+            cout << "1. Turn on the Engine\n";
+            cout << "2. Step Away from the engine\n";
+            cout << "Enter your choice: ";
+            cin >> choice;
+            cout << "\n"; // Add a blank line after input
+
+            switch (choice)
+            {
+            case 1:
+                if (!player.get_enginePiece())
                 {
-                case 1:
-                    lookAtEngine();
-                    break;
-                case 2:
-                    cout << readFromFile("engineroom_leave.txt") << endl;
-                    return;
-                default:
-                    cout << "Invalid choice. Please try again.\n\n"; // Double newline for clarity
-                }
-            } while (choice != 2);
-        }
-
-        //need public get function to allow other classes to check if engine is running
-
-    private:
-        bool enginePiece = false; // Assuming initially player doesn't have engine piece
-
-        // Function to handle looking at the engine
-        void lookAtEngine()
-        {
-            cout << readFromFile("engineroom_lookatengine.txt") << endl;
-
-            int choice;
-            do {
-                cout << "\n"; // Add a blank line
-                cout << "Choose an option:\n";
-                cout << "1. Turn on the Engine\n";
-                cout << "2. Step Away from the engine\n";
-                cout << "Enter your choice: ";
-                cin >> choice;
-                cout << "\n"; // Add a blank line after input
-
-                switch (choice)
-                {
-                case 1:
-                    if (!enginePiece)
-                    {
-                        cout << "\n"; // Add a blank line
-                        cout << readFromFile("engineroom_engineoff.txt") << endl;
-                    }
-                    else
-                    {
-                        cout << "\n"; // Add a blank line
-                        cout << readFromFile("engineroom_engineon.txt") << endl;
-                        engineRunningOptions();
-                    }
-                    break;
-                case 2:
                     cout << "\n"; // Add a blank line
-                    cout << readFromFile("engineroom_stepaway.txt") << endl;
-                    return;
-                default:
-                    cout << "Invalid choice. Please try again.\n\n"; // Double newline for clarity
+                    cout << readFromFile("engineroom_engineoff.txt") << endl;
                 }
-            } while (true);
-        }
-
-        // Function to handle options when the engine is running
-        void engineRunningOptions()
-        {
-            cout << readFromFile("engineroom_enginerunning.txt") << endl;
-
-            int choice;
-            do {
-                cout << "Choose an option:\n";
-                cout << "1. Step Away from the engine\n";
-                cout << "Enter your choice: ";
-                cin >> choice;
-                cout << "\n"; // Add a blank line after input
-
-                switch (choice)
+                else
                 {
-                case 1:
-                    return;
-                default:
-                    cout << "Invalid choice. Please try again.\n\n"; // Double newline for clarity
+                    cout << "\n"; // Add a blank line
+                    cout << readFromFile("engineroom_engineon.txt") << endl;
+                    on = true; // track that engine is on
+                    engineRunningOptions();
                 }
-            } while (true);
-        }
-        //need a variable to track if engine is running
+                break;
+            case 2:
+                cout << "\n"; // Add a blank line
+                cout << readFromFile("engineroom_stepaway.txt") << endl;
+                return;
+            default:
+                cout << "Invalid choice. Please try again.\n\n"; // Double newline for clarity
+            }
+        } while (true);
+    }
+
+    // Function to handle options when the engine is running
+    void engineRunningOptions()
+    {
+        cout << readFromFile("engineroom_enginerunning.txt") << endl;
+
+        int choice;
+        do {
+            cout << "Choose an option:\n";
+            cout << "1. Step Away from the engine\n";
+            cout << "Enter your choice: ";
+            cin >> choice;
+            cout << "\n"; // Add a blank line after input
+
+            switch (choice)
+            {
+            case 1:
+                return;
+            default:
+                cout << "Invalid choice. Please try again.\n\n"; // Double newline for clarity
+            }
+        } while (true);
+    }
 };
 
 // Class for Sleeping Quarters - Jared
 class SleepingQuarters {
 public:
-    void enter(Copilot &copilot, EngineRoom &engineRoom, Player &player) {
+    void enter(Copilot &copilot, Player &player) {
         cout << readFromFile("sleeping_quarters_intro.txt") << endl;
 
         int choice;
@@ -266,15 +254,16 @@ private:
     void handleChoice(int choice, Copilot &copilot, Player &player) {
         switch (choice) {
             case 1:
-                searchRoom(copilot, player);
+                searchRoom(copilot);
                 break;
             case 2:
                 searchLockers();
                 break;
             case 3:
-                searchBelongings(copilot, player);
+                searchBelongings();
                 break;
             case 4:
+                system("cls"); 
                 cout << "You leave the sleeping quarters and enter into the main hallway." << endl;
                 break;
             default:
@@ -284,13 +273,13 @@ private:
     }
 
     // Search room function for copilot
-    void searchRoom(Copilot &copilot, Player &player) {
+    void searchRoom(Copilot &copilot) {
         cout << readFromFile("sq_search.txt") << endl;
 
         if (!copilot.obtained) {
             cout << readFromFile("sq_found_copilot.txt") << endl;
             copilot.obtained = true; // The copilot is now found
-            displayDialogOptions(copilot);
+            displayDialogOptions();
         } else {
             cout << readFromFile("sq_no_copilot.txt") << endl; // If player returns and copilot is already found
         }
@@ -300,12 +289,12 @@ private:
         cout << readFromFile("sq_lockers.txt") << endl;
     }
 
-    void searchBelongings(Copilot &copilot, Player &player) {
+    void searchBelongings() {
         cout << readFromFile("sq_belongings.txt") << endl;
     }
 
     // Dialog options with copilot
-    void displayDialogOptions(Copilot &copilot) const {
+    void displayDialogOptions() const {
         int dialogChoice;
         do {
             cout << "What would you like to ask?" << endl;
@@ -348,7 +337,7 @@ private:
 class MedicalBay
 {
 public:
-    void enter(Copilot &copilot, EngineRoom &engineRoom, Player &player)
+    void enter(Copilot &copilot, Player &player)
     {
         cout << readFromFile("medical_bay.txt") << endl; // intro to medical bay
 
@@ -389,6 +378,7 @@ private:
                 handleDesk(player); // where key is found, requires code
                 break;
             case 4:
+                system("cls"); 
                 cout << "You leave the medical bay and enter into the main hallway." << endl; // enter hallway
                 break;
             default:
@@ -456,94 +446,95 @@ private:
 };
 
 class StorageRoom {
-    public:
-        void enter(Copilot &copilot, EngineRoom &engineRoom, Player &player) {
-            cout << "In the storage room" << endl;
-        }
+public:
+    void enter(Copilot &copilot, EngineRoom &engineRoom, Player &player) {
+        cout << "In the storage room" << endl;
+    }
 
-        //needs public get and set methods for private var that tracks if unlocked
+    //needs public get and set methods for private var that tracks if unlocked
 
-    private:
-        //needs variable to track if unlocked
+private:
+    //needs variable to track if unlocked
 };
 
 //Class for Cockpit - Thatcher
 class Cockpit {
-    public:
-        Cockpit () : unlocked(false) {};
+public:
+    Cockpit () : unlocked(false) {};
 
-        void enter(Copilot &copilot, EngineRoom &engineRoom, Player &player) {
-            if (!player.get_key()) {
-                cout << endl << readFromFile("cockpitLocked.txt");
-                return;
+    void enter(Copilot &copilot, EngineRoom &engineRoom) {
+        if (!copilot.obtained) { //copilot provides key for cockpit
+            cout << endl << readFromFile("cockpitLocked.txt");
+            return;
+        } else {
+            if (unlocked) {
+                cout << endl << readFromFile("enterCockpit.txt");
             } else {
-                if (unlocked) {
-                    cout << endl << readFromFile("./TEXT-BASED-ADVENTURE-NAME-PENDING/enterCockpit.txt");
-                } else {
-                    cout << endl << readFromFile("cockpitUnlocked.txt");
-                    unlocked = true; //changed dialogue option after first unlocked
-                }
-                int choice;
-                do {
-                    cout << "\nChoose an option: \n";
-                    cout << "1. Look at the control board\n";
-                    cout << "2. Look out the window\n";
-                    cout << "3. Return to the Hallway\n";
-                    cin >> choice;
-
-                    switch (choice) {
-                        case 1:
-                            controlBoard(copilot, engineRoom);
-                            break;
-                        case 2:
-                            cout << endl << readFromFile("window.txt");
-                            break;
-                        case 3:
-                            cout << endl << readFromFile("exitCockpit.txt");
-                            return;
-                        default:
-                            cout << "Invalid option. Please select a valid choice.\n";
-                    }
-
-                } while(true);
+                cout << endl << readFromFile("cockpitUnlocked.txt");
+                unlocked = true; //changed dialogue option after first unlocked
             }
-        }
-
-    private:
-        void controlBoard(Copilot& copilot, EngineRoom& engineRoom) {
-           if (!engineRoom.on && !copilot.obtained) {
-                cout << endl << readFromFile("engineOff.txt");
-                return;
-           } else if (!engineRoom.on && copilot.obtained) {
-                cout << endl << readFromFile("noCopilot.txt");
-           } else if (engineRoom.on && copilot.injured && copilot.obtained) {
-                cout << endl << readFromFile("copilotInjuredCockpit.txt");
-           } else if (engineRoom.on && !copilot.injured && copilot.obtained) { //need engine room variable and get function
-                int choice;
-                cout << endl << readFromFile("engineOn.txt");
-                cout << "\nWhat would you like to do:\n";
-                cout << "1. Press the button\n";
-                cout << "2. Do nothing\n";
+            int choice;
+            do {
+                cout << "\nChoose an option: \n";
+                cout << "1. Look at the control board\n";
+                cout << "2. Look out the window\n";
+                cout << "3. Return to the Hallway\n";
                 cin >> choice;
 
-                do {
-                    switch (choice) {
-                        case 1:
-                            cout << endl << readFromFile("gameWin.txt");
-                            cout << "Press any key to exit.";
-                            waitForKeyPress();
-                            exit(0);
-                            break;
-                        case 2:
-                            cout << endl << readFromFile("noWin.txt");
-                            return;
-                        default:
-                            cout << "Invalid option. Please select a valid choice.\n";
-                            break;
-                    }
-                } while(true);
-            } 
-        }
+                switch (choice) {
+                    case 1:
+                        controlBoard(copilot, engineRoom);
+                        break;
+                    case 2:
+                        cout << endl << readFromFile("window.txt");
+                        break;
+                    case 3:
+                        system("cls"); 
+                        cout << endl << readFromFile("exitCockpit.txt");
+                        return;
+                    default:
+                        cout << "Invalid option. Please select a valid choice.\n";
+                }
 
-        bool unlocked;
+            } while(true);
+        }
+    }
+
+private:
+    void controlBoard(Copilot& copilot, EngineRoom& engineRoom) {
+        if (!engineRoom.on && !copilot.obtained) {
+            cout << endl << readFromFile("engineOff.txt");
+            return;
+        } else if (!engineRoom.on && copilot.obtained) {
+            cout << endl << readFromFile("noCopilot.txt");
+        } else if (engineRoom.on && copilot.injured && copilot.obtained) {
+            cout << endl << readFromFile("copilotInjuredCockpit.txt");
+        } else if (engineRoom.on && !copilot.injured && copilot.obtained) { //need engine room variable and get function
+            int choice;
+            cout << endl << readFromFile("engineOn.txt");
+            cout << "\nWhat would you like to do:\n";
+            cout << "1. Press the button\n";
+            cout << "2. Do nothing\n";
+            cin >> choice;
+
+            do {
+                switch (choice) {
+                    case 1:
+                        cout << endl << readFromFile("gameWin.txt");
+                        cout << "Press any key to exit.";
+                        waitForKeyPress();
+                        exit(0);
+                        break;
+                    case 2:
+                        cout << endl << readFromFile("noWin.txt");
+                        return;
+                    default:
+                        cout << "Invalid option. Please select a valid choice.\n";
+                        break;
+                }
+            } while(true);
+        } 
+    }
+
+    bool unlocked;
 };

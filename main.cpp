@@ -4,6 +4,18 @@ using namespace std;
 
 int main() {
 
+
+    // set working directory to text folder to read narrative
+    char* dir = "text";
+    char buffer[1024];
+
+    if (_chdir(dir) == -1) {
+        cout << "Path not changed\n";
+    } else {
+        _getcwd(buffer, 1024);
+        cout << buffer << endl;
+    }
+
     Copilot copilot; 
     Cockpit cockpit;
     SleepingQuarters sleepingQuarters;
@@ -20,7 +32,7 @@ int main() {
     cout << readFromFile("introduction.txt");
 
     // Start the game in the Medical Bay
-    medicalBay.enter(copilot, engineRoom, player);
+    medicalBay.enter(copilot, player);
 
     // Main game loop
     while (true)
@@ -32,30 +44,36 @@ int main() {
         {
             case 'A':
             case 'a':
+                system("cls"); 
                 player.set_location(COCKPIT);
-                cockpit.enter(copilot, engineRoom, player);
+                cockpit.enter(copilot, engineRoom);
                 break;
             case 'B':
             case 'b':
+                system("cls"); 
                 player.set_location(SLEEPING_QUARTERS);
-                sleepingQuarters.enter(copilot, engineRoom, player);
+                sleepingQuarters.enter(copilot, player);
                 break;
             case 'C':
             case 'c':
+                system("cls"); 
                 player.set_location(MEDICAL_BAY);
-                medicalBay.enter(copilot, engineRoom, player);
+                medicalBay.enter(copilot, player);
                 break;
             case 'D':
             case 'd':
+                system("cls"); 
                 player.set_location(STORAGE);
                 storageRoom.enter(copilot, engineRoom, player);
                 break;
             case 'E':
             case 'e':
+                system("cls"); 
                 player.set_location(ENGINE_ROOM);
-                engineRoom.enter(copilot, player);
+                engineRoom.enter(player);
                 break;
             default:
+                system("cls"); 
                 cout << "Invalid choice. Please try again.\n";
         }
     }
