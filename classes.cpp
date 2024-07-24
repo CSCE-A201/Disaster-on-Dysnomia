@@ -6,6 +6,7 @@
 #include <ctime>
 #include <stdio.h>
 #include <direct.h>
+#include <limits>
 using namespace std;
 
 // Function to read text from a file
@@ -29,8 +30,9 @@ string readFromFile(const string& filename)
 // Pauses the game until the player presses a key
 void waitForKeyPress()
 {
-    cin.ignore();
-    cin.get();
+    char c;
+    cin.ignore(numeric_limits<streamsize>::max(),'\n');
+	cin.get(c);
 }
 
 //enum for location - Thatcher
@@ -76,8 +78,8 @@ public:
         playerLocation = val;
     }
 private:
-    bool cabinetKey;
-    bool enginePiece;
+    bool cabinetKey = false;
+    bool enginePiece = false;
     location playerLocation;
 };
 
@@ -156,8 +158,6 @@ public:
     }
 
 private:
-    bool enginePiece = false; // Assuming initially player doesn't have engine piece
-
     // Function to handle looking at the engine
     void lookAtEngine(Player &player)
     {
@@ -235,7 +235,7 @@ public:
             cin >> choice;
             cout << endl;
 
-            handleChoice(choice, copilot, player);
+            handleChoice(choice, copilot);
         } while (choice != 4); // Continue until the player chooses to leave the room
     }
 
@@ -251,7 +251,7 @@ private:
     }
     
     // Handle options within sleeping quarters
-    void handleChoice(int choice, Copilot &copilot, Player &player) {
+    void handleChoice(int choice, Copilot &copilot) {
         switch (choice) {
             case 1:
                 searchRoom(copilot);
@@ -517,6 +517,7 @@ public:
                 int roll = rand() % 20 + 1 + buff;
                 total += roll;
                 cout << "Roll " << i + 1 << ": " << roll << "\n";
+                waitForKeyPress();
             }
 
             if (total >= 25)
@@ -549,8 +550,12 @@ public:
             switch (choice)
             {
             case 1:
-                cout << "You found a collector coil!\n";
-                player.set_enginePiece(true);
+                if (player.get_enginePiece()) {
+                    cout << "There is nothing more to find here.\n";
+                } else {
+                    cout << "You found a collector coil!\n";
+                    player.set_enginePiece(true);
+                }
                 break;
             case 2:
                 cout << readFromFile("storageroom_leave.txt") << endl;
