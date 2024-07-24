@@ -64,7 +64,7 @@ int main() {
             case 'd':
                 system("cls"); 
                 player.set_location(STORAGE);
-                storageRoom.enter(copilot, engineRoom, player);
+                storageRoom.enter(player, copilot);
                 break;
             case 'E':
             case 'e':
