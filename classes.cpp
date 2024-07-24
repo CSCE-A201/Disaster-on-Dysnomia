@@ -377,7 +377,7 @@ class Cockpit {
                 return;
             } else {
                 if (unlocked) {
-                    cout << endl << readFromFile("enterCockpit.txt");
+                    cout << endl << readFromFile("./TEXT-BASED-ADVENTURE-NAME-PENDING/enterCockpit.txt");
                 } else {
                     cout << endl << readFromFile("cockpitUnlocked.txt");
                     unlocked = true; //changed dialogue option after first unlocked
@@ -410,10 +410,14 @@ class Cockpit {
 
     private:
         void controlBoard(Copilot& copilot, EngineRoom& engineRoom) {
-           if (!engineRoom.on) {
+           if (!engineRoom.on && !copilot.obtained) {
                 cout << endl << readFromFile("engineOff.txt");
                 return;
-           } else if (!copilot.injured && copilot.obtained) { //need engine room variable and get function
+           } else if (!engineRoom.on && copilot.obtained) {
+                cout << endl << readFromFile("noCopilot.txt");
+           } else if (engineRoom.on && copilot.injured && copilot.obtained) {
+                cout << endl << readFromFile("copilotInjuredCockpit.txt");
+           } else if (engineRoom.on && !copilot.injured && copilot.obtained) { //need engine room variable and get function
                 int choice;
                 cout << endl << readFromFile("engineOn.txt");
                 cout << "\nWhat would you like to do:\n";
