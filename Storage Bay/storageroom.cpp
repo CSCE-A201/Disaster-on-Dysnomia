@@ -22,22 +22,31 @@ string readFromFile(const string& filename)
     return content;
 }
 
+// Copilot class
+class Copilot {
+public:
+    bool obtained; // Indicates if the copilot has been found
+    bool injured;  // Indicates if the copilot is injured
+
+    // Constructor to initialize copilot state
+    Copilot() : obtained(false), injured(false) {}
+};
+
 // Player class
 class Player
 {
 public:
-    enum CopilotState { LOST, FOUND, INJURED };
     enum Location { ENGINE_ROOM, COCKPIT, HALLWAY, STORAGE_ROOM, MEDICAL_BAY, SLEEPING_QUARTERS };
 
 private:
     string name;
     bool key;
-    CopilotState copilot;
+    Copilot copilot;
     bool puzzlePiece;
     Location location;
 
 public:
-    Player() : key(false), copilot(LOST), puzzlePiece(false), location(ENGINE_ROOM) {}
+    Player() : key(false), puzzlePiece(false), location(ENGINE_ROOM) {}
 
     void setName(const string& n) { name = n; }
     string getName() const { return name; }
@@ -45,8 +54,8 @@ public:
     void setKey(bool k) { key = k; }
     bool getKey() const { return key; }
 
-    void setCopilot(CopilotState c) { copilot = c; }
-    CopilotState getCopilot() const { return copilot; }
+    Copilot& getCopilot() { return copilot; }
+    const Copilot& getCopilot() const { return copilot; }
 
     void setPuzzlePiece(bool p) { puzzlePiece = p; }
     bool getPuzzlePiece() const { return puzzlePiece; }
@@ -74,7 +83,7 @@ public:
 
     void enter(Player& player)
     {
-        if (player.getCopilot() != Player::FOUND)
+        if (!player.getCopilot().obtained)
         {
             cout << "You need to find the copilot first before entering the storage room.\n";
             return;
@@ -136,7 +145,7 @@ public:
             else
             {
                 cout << "You defeated the pirate, but the copilot is injured and will require medical assistance.\n";
-                player.setCopilot(Player::INJURED);
+                player.getCopilot().injured = true;
             }
 
             pirateEncountered = true; // Mark that the pirate has been encountered
@@ -180,7 +189,7 @@ int main()
     StorageRoom storageRoom;
 
     // Example of setting player's copilot status to FOUND
-    player.setCopilot(Player::FOUND);
+    player.getCopilot().obtained = true;
 
     // Player enters the storage room
     storageRoom.enter(player);
