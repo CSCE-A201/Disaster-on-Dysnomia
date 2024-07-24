@@ -52,7 +52,7 @@ int main() {
             case 'b':
                 system("cls"); 
                 player.set_location(SLEEPING_QUARTERS);
-                sleepingQuarters.enter(copilot, player);
+                sleepingQuarters.enter(copilot);
                 break;
             case 'C':
             case 'c':

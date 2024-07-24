@@ -226,7 +226,7 @@ private:
 // Class for Sleeping Quarters - Jared
 class SleepingQuarters {
 public:
-    void enter(Copilot &copilot, Player &player) {
+    void enter(Copilot &copilot) {
         cout << readFromFile("sleeping_quarters_intro.txt") << endl;
 
         int choice;
