@@ -7,7 +7,21 @@
 #include <stdio.h>
 #include <direct.h> 
 #include <limits>
+#include <conio.h>
 using namespace std;
+
+// Function to validate input
+char get_char() {
+    char ch;
+
+    while (!(cin >> ch) || cin.peek() != '\n') {
+        cin.clear(); // Clear error flags
+        cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Discard invalid input
+        cout << "Invalid input. Please enter a valid option: ";
+    }
+
+    return ch;
+}
 
 // Function to read text from a file
 // Takes a filename as an argument and returns the file's content as a string
@@ -28,11 +42,12 @@ string readFromFile(const string& filename)
 
 // Function to wait for any key press
 // Pauses the game until the player presses a key
-void waitForKeyPress()
+void waitForKeyPress(string msg = "")
 {
-    char c;
-    cin.ignore(numeric_limits<streamsize>::max(),'\n');
-	cin.get(c);
+    if (msg != "") {
+        cout << msg << endl;
+    }
+    getch();
 }
 
 //enum for location - Thatcher
@@ -98,7 +113,7 @@ class Hallway {
             cout << "E. Go to Engine Room\n";
 
             cout << "\nWhere would you like to go?: ";
-            cin >> choice;
+            choice = get_char();
         };
 
         //return the value of choice
@@ -133,28 +148,28 @@ public:
     {
         cout << readFromFile("engineroom_entry.txt") << endl;
 
-        int choice;
+        char choice;
         do {
             cout << "Choose an option:\n";
             cout << "1. Look at the engine\n";
             cout << "2. Leave the room\n";
             cout << "Enter your choice: ";
-            cin >> choice;
+            choice = get_char();
             cout << "\n"; // Add a blank line after input
 
             switch (choice)
             {
-            case 1:
+            case '1':
                 lookAtEngine(player);
                 break;
-            case 2:
+            case '2':
                 system("cls"); 
                 cout << readFromFile("engineroom_leave.txt") << endl;
                 return;
             default:
                 cout << "Invalid choice. Please try again.\n\n"; // Double newline for clarity
             }
-        } while (choice != 2);
+        } while (choice != '2');
     }
 
 private:
@@ -163,19 +178,19 @@ private:
     {
         cout << readFromFile("engineroom_lookatengine.txt") << endl;
 
-        int choice;
+        char choice;
         do {
             cout << "\n"; // Add a blank line
             cout << "Choose an option:\n";
             cout << "1. Turn on the Engine\n";
             cout << "2. Step Away from the engine\n";
             cout << "Enter your choice: ";
-            cin >> choice;
+            choice = get_char();
             cout << "\n"; // Add a blank line after input
 
             switch (choice)
             {
-            case 1:
+            case '1':
                 if (!player.get_enginePiece())
                 {
                     cout << "\n"; // Add a blank line
@@ -189,7 +204,7 @@ private:
                     engineRunningOptions();
                 }
                 break;
-            case 2:
+            case '2':
                 cout << "\n"; // Add a blank line
                 cout << readFromFile("engineroom_stepaway.txt") << endl;
                 return;
@@ -204,17 +219,17 @@ private:
     {
         cout << readFromFile("engineroom_enginerunning.txt") << endl;
 
-        int choice;
+        char choice;
         do {
             cout << "Choose an option:\n";
             cout << "1. Step Away from the engine\n";
             cout << "Enter your choice: ";
-            cin >> choice;
+            choice = get_char();
             cout << "\n"; // Add a blank line after input
 
             switch (choice)
             {
-            case 1:
+            case '1':
                 return;
             default:
                 cout << "Invalid choice. Please try again.\n\n"; // Double newline for clarity
@@ -229,14 +244,14 @@ public:
     void enter(Copilot &copilot) {
         cout << readFromFile("sleeping_quarters_intro.txt") << endl;
 
-        int choice;
+        char choice;
         do {
             displayChoices();
-            cin >> choice;
+            choice = get_char();
             cout << endl;
 
             handleChoice(choice, copilot);
-        } while (choice != 4); // Continue until the player chooses to leave the room
+        } while (choice != '4'); // Continue until the player chooses to leave the room
     }
 
 private:
@@ -253,16 +268,16 @@ private:
     // Handle options within sleeping quarters
     void handleChoice(int choice, Copilot &copilot) {
         switch (choice) {
-            case 1:
+            case '1':
                 searchRoom(copilot);
                 break;
-            case 2:
+            case '2':
                 searchLockers();
                 break;
-            case 3:
+            case '3':
                 searchBelongings();
                 break;
-            case 4:
+            case '4':
                 system("cls"); 
                 cout << "You leave the sleeping quarters and enter into the main hallway." << endl;
                 break;
@@ -295,7 +310,7 @@ private:
 
     // Dialog options with copilot
     void displayDialogOptions() const {
-        int dialogChoice;
+        char dialogChoice;
         do {
             cout << "What would you like to ask?" << endl;
             cout << "1. What happened to the ship?" << endl;
@@ -303,27 +318,27 @@ private:
             cout << "3. What should we do next?" << endl;
             cout << "4. How did you end up in the sleeping quarters?" << endl;
             cout << "5. Leave the conversation" << endl;
-            cin >> dialogChoice;
+            dialogChoice = get_char();
             cout << endl;
 
-            if (dialogChoice != 5) {
+            if (dialogChoice != '5') {
                 handleDialogChoice(dialogChoice);
             }
-        } while (dialogChoice != 5); // Continue until the player chooses to leave
+        } while (dialogChoice != '5'); // Continue until the player chooses to leave
     }
 
     void handleDialogChoice(int choice) const {
         switch (choice) {
-            case 1:
+            case '1':
                 cout << readFromFile("sq_dialog_ship.txt") << endl;
                 break;
-            case 2:
+            case '2':
                 cout << readFromFile("sq_dialog_everybody.txt") << endl;
                 break;
-            case 3:
+            case '3':
                 cout << readFromFile("sq_dialog_next.txt") << endl;
                 break;
-            case 4:
+            case '4':
                 cout << readFromFile("sq_dialog_copilot_background.txt") << endl;
                 break;
             default:
@@ -341,14 +356,14 @@ public:
     {
         cout << readFromFile("medical_bay.txt") << endl; // intro to medical bay
 
-        int choice;
+        char choice;
         do {
             displayChoices();
-            cin >> choice;
+            choice = get_char();
             cout << endl;
 
             handleChoice(choice, copilot, player);
-        } while (choice != 4); // Continue until the player chooses to enter the hallway
+        } while (choice != '4'); // Continue until the player chooses to enter the hallway
     }
 
 private:
@@ -364,20 +379,20 @@ private:
         cout << "Enter your choice (1-4): ";
     }
 
-    void handleChoice(int choice, Copilot &copilot, Player &player)
+    void handleChoice(char choice, Copilot &copilot, Player &player)
     {
         switch (choice)
         {
-            case 1:
+            case '1':
                 handleCabinet(copilot, player); // medical supplies for copilot, needs key
                 break;
-            case 2:
+            case '2':
                 cout << readFromFile("mb_equipment_nothing.txt") << endl; // no important gameplay mechanics
                 break;
-            case 3:
+            case '3':
                 handleDesk(player); // where key is found, requires code
                 break;
-            case 4:
+            case '4':
                 system("cls"); 
                 cout << "You leave the medical bay and enter into the main hallway." << endl; // enter hallway
                 break;
@@ -416,7 +431,7 @@ private:
         cout << readFromFile("mb_desk.txt") << endl; // Display desk info
 
         cout << "Do you know the 4-digit code? (Y/N): ";
-        cin >> knowCode;
+        knowCode = get_char();
         cout << endl;
 
         if (knowCode == 'Y' || knowCode == 'y')
@@ -475,7 +490,7 @@ public:
             cout << readFromFile("storageroom_entry.txt") << endl;
 
             // Choice of weapon
-            int choice;
+            char choice;
             int buff = 0;
             do {
                 cout << "Choose an option:\n";
@@ -483,20 +498,20 @@ public:
                 cout << "2. Pick up a fire extinguisher\n";
                 cout << "3. Fist fight the pirate\n";
                 cout << "Enter your choice: ";
-                cin >> choice;
+                choice = get_char();
                 cout << "\n"; // Add a blank line after input
 
                 switch (choice)
                 {
-                case 1:
+                case '1':
                     cout << "You picked up a wrench. It is a bit rusty.\n";
                     buff = 4; // Small buff for wrench
                     break;
-                case 2:
+                case '2':
                     cout << "You picked up a fire extinguisher. It is unwieldy but bulky.\n";
                     buff = 2; // Small buff for fire extinguisher
                     break;
-                case 3:
+                case '3':
                     cout << "You decided to fist fight the pirate.\n";
                     buff = -2; // Small debuff for fist fighting
                     break;
@@ -512,13 +527,16 @@ public:
 
             // Enemy encounter
             int total = 0;
+
             for (int i = 0; i < 3; ++i)
-            {
+            {   
                 int roll = rand() % 20 + 1 + buff;
                 total += roll;
-                cout << "Roll " << i + 1 << ": " << roll << "\n";
-                waitForKeyPress();
+                waitForKeyPress("Press enter to roll: ");
+                cout << "Roll " << i + 1 << ": " << roll << endl;
             }
+
+            cout << endl;
 
             if (total >= 25)
             {
@@ -538,18 +556,18 @@ public:
         }
 
         // After encounter options
-        int choice;
+        char choice;
         do {
             cout << "Choose an option:\n";
             cout << "1. Search the room\n";
             cout << "2. Leave the room\n";
             cout << "Enter your choice: ";
-            cin >> choice;
+            choice = get_char();
             cout << "\n"; // Add a blank line after input
 
             switch (choice)
             {
-            case 1:
+            case '1':
                 if (player.get_enginePiece()) {
                     cout << "There is nothing more to find here.\n";
                 } else {
@@ -557,13 +575,13 @@ public:
                     player.set_enginePiece(true);
                 }
                 break;
-            case 2:
+            case '2':
                 cout << readFromFile("storageroom_leave.txt") << endl;
                 return;
             default:
                 cout << "Invalid choice. Please try again.\n\n"; // Double newline for clarity
             }
-        } while (choice != 2);
+        } while (choice != '2');
     }
 };
 
@@ -583,22 +601,22 @@ public:
                 cout << endl << readFromFile("cockpitUnlocked.txt");
                 unlocked = true; //changed dialogue option after first unlocked
             }
-            int choice;
+            char choice;
             do {
                 cout << "\nChoose an option: \n";
                 cout << "1. Look at the control board\n";
                 cout << "2. Look out the window\n";
                 cout << "3. Return to the Hallway\n";
-                cin >> choice;
+                choice = get_char();
 
                 switch (choice) {
-                    case 1:
+                    case '1':
                         controlBoard(copilot, engineRoom);
                         break;
-                    case 2:
+                    case '2':
                         cout << endl << readFromFile("window.txt");
                         break;
-                    case 3:
+                    case '3':
                         system("cls"); 
                         cout << endl << readFromFile("exitCockpit.txt");
                         return;
@@ -620,22 +638,22 @@ private:
         } else if (engineRoom.on && copilot.injured && copilot.obtained) {
             cout << endl << readFromFile("copilotInjuredCockpit.txt");
         } else if (engineRoom.on && !copilot.injured && copilot.obtained) { //need engine room variable and get function
-            int choice;
+            char choice;
             cout << endl << readFromFile("engineOn.txt");
             cout << "\nWhat would you like to do:\n";
             cout << "1. Press the button\n";
             cout << "2. Do nothing\n";
-            cin >> choice;
+            choice = get_char();
 
             do {
                 switch (choice) {
-                    case 1:
+                    case '1':
                         cout << endl << readFromFile("gameWin.txt");
                         cout << "Press any key to exit.";
                         waitForKeyPress();
                         exit(0);
                         break;
-                    case 2:
+                    case '2':
                         cout << endl << readFromFile("noWin.txt");
                         return;
                     default:
@@ -646,5 +664,5 @@ private:
         } 
     }
 
-    bool unlocked;
+    bool unlocked = false;
 };
