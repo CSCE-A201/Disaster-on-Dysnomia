@@ -98,7 +98,7 @@ private:
     location playerLocation;
 };
 
-// Function to display map
+// Function to check location and display map
 void map(Player &player) {
 
     char cockpit, medical, storage, sleeping, hallway, engine;
