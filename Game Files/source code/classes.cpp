@@ -106,11 +106,11 @@ class Hallway {
 		void move() {
             cout << endl;
             cout << "Choose an option:\n";
-            cout << "A. Go to Cockpit\n";
-            cout << "B. Go to Sleeping Quarters\n";
-            cout << "C. Go to Medical Bay\n";
-            cout << "D. Go to Storage Room\n";
-            cout << "E. Go to Engine Room\n";
+            cout << "1. Go to Cockpit\n";
+            cout << "2. Go to Sleeping Quarters\n";
+            cout << "3. Go to Medical Bay\n";
+            cout << "4. Go to Storage Room\n";
+            cout << "5. Go to Engine Room\n";
 
             cout << "\nWhere would you like to go?: ";
             choice = get_char();
