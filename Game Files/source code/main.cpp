@@ -28,7 +28,7 @@ int main() {
     srand(static_cast<unsigned int>(time(0))); // Seed the random number generator
 
     // Display welcome message and introduction
-    cout << "Welcome to the Untitled RPG game!\n";
+    cout << "Welcome to Disaster on Dysnomia!\n";
     cout << readFromFile("introduction.txt");
 
     // Start the game in the Medical Bay
