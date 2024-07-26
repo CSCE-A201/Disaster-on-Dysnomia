@@ -98,54 +98,12 @@ private:
     location playerLocation;
 };
 
-// Function to display map
-void map(Player &player) {
-
-    char cockpit, medical, storage, sleeping, hallway, engine;
-    cockpit = medical = storage = sleeping = hallway = engine = '-';
-
-    if (player.get_location() == MEDICAL_BAY) {
-        medical = 'X';
-        cockpit = storage = sleeping = hallway = engine = '-';
-    } else if (player.get_location() == ENGINE_ROOM) {
-        engine = 'X';
-        cockpit = medical = storage = sleeping = hallway = '-';
-    } else if (player.get_location() == COCKPIT) {
-        cockpit = 'X';
-        medical = storage = sleeping = hallway = engine = '-';
-    } else if (player.get_location() == STORAGE) {
-        storage = 'X';
-        cockpit = medical = sleeping = hallway = engine = '-';
-    } else if (player.get_location() == SLEEPING_QUARTERS) {
-        sleeping = 'X';
-        cockpit = medical = storage = hallway = engine = '-';
-    } else {
-        hallway = 'X';
-        cockpit = medical = storage = sleeping = engine = '-';
-    }
-    
-    cout << "         |---------|         \n";
-    cout << "         | Cockpit |         \n";
-    cout << "         |    " << cockpit << "    |\n";
-    cout << "|--------|---------|----------|\n";
-    cout << "|        |         |  Medical |\n";
-    cout << "|        |         |     " << medical << "    |\n";
-    cout << "| Engine | Hallway |          |\n";
-    cout << "|    " << engine << "   |    " << hallway << "    |          |\n";
-    cout << "|        |         |----------|\n";
-    cout << "|        |         | Sleeping |\n";
-    cout << "|        |         |     " << sleeping << "    |\n";
-    cout << "|--------|---------|----------|\n";
-}
-
 //Class for Hallway - Thatcher
 class Hallway {
 	public:
 
         //output movement options for the player and get choice
-		void move(Player &player) {
-            player.set_location(HALLWAY);
-            map(player);
+		void move() {
             cout << endl;
             cout << "Choose an option:\n";
             cout << "A. Go to Cockpit\n";
@@ -188,9 +146,6 @@ public:
     // Function to handle entering the engine room
     void enter(Player &player) //added arguments as values from these classes should be checked
     {
-        player.set_location(ENGINE_ROOM);
-        map(player);
-
         cout << readFromFile("engineroom_entry.txt") << endl;
 
         char choice;
@@ -286,9 +241,7 @@ private:
 // Class for Sleeping Quarters - Jared
 class SleepingQuarters {
 public:
-    void enter(Copilot &copilot, Player &player) {
-        player.set_location(SLEEPING_QUARTERS);
-        map(player);
+    void enter(Copilot &copilot) {
         cout << readFromFile("sleeping_quarters_intro.txt") << endl;
 
         char choice;
@@ -401,8 +354,6 @@ class MedicalBay
 public:
     void enter(Copilot &copilot, Player &player)
     {
-        player.set_location(MEDICAL_BAY);
-        map(player);
         cout << readFromFile("medical_bay.txt") << endl; // intro to medical bay
 
         char choice;
@@ -534,9 +485,6 @@ public:
             return;
         }
 
-        player.set_location(STORAGE);
-        map(player);
-
         if (!pirateEncountered)
         {
             cout << readFromFile("storageroom_entry.txt") << endl;
@@ -642,14 +590,11 @@ class Cockpit {
 public:
     Cockpit () : unlocked(false) {};
 
-    void enter(Copilot &copilot, EngineRoom &engineRoom, Player &player) {
+    void enter(Copilot &copilot, EngineRoom &engineRoom) {
         if (!copilot.obtained) { //copilot provides key for cockpit
             cout << endl << readFromFile("cockpitLocked.txt");
             return;
         } else {
-            player.set_location(COCKPIT);
-            map(player);
-            
             if (unlocked) {
                 cout << endl << readFromFile("enterCockpit.txt");
             } else {
