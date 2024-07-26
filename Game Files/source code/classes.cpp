@@ -327,7 +327,7 @@ private:
         } while (dialogChoice != '5'); // Continue until the player chooses to leave
     }
 
-    void handleDialogChoice(int choice) const {
+    void handleDialogChoice(char choice) const {
         switch (choice) {
             case '1':
                 cout << readFromFile("sq_dialog_ship.txt") << endl;
