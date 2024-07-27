@@ -44,27 +44,22 @@ int main() {
         {
             case '1':
                 system("cls"); 
-                player.set_location(COCKPIT);
                 cockpit.enter(copilot, engineRoom, player);
                 break;
             case '2':
                 system("cls"); 
-                player.set_location(SLEEPING_QUARTERS);
                 sleepingQuarters.enter(copilot, player);
                 break;
             case '3':
                 system("cls"); 
-                player.set_location(MEDICAL_BAY);
                 medicalBay.enter(copilot, player);
                 break;
             case '4':
                 system("cls"); 
-                player.set_location(STORAGE);
                 storageRoom.enter(player, copilot);
                 break;
             case '5':
-                system("cls"); 
-                player.set_location(ENGINE_ROOM);
+                system("cls");
                 engineRoom.enter(player);
                 break;
             default:
