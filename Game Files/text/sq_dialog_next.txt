@@ -1,1 +1,3 @@
-Copilot: "We need to get to the engine room and see if we can figure out what caused the jolt. If we can repair any damage and get the systems back online, we might be able to regain control of the ship.”
+Copilot: 
+"We need to get to the engine room and see if we can figure out what caused the jolt. 
+If we can repair any damage and get the systems back online, we might be able to regain control of the ship.”
