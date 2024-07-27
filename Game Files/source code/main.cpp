@@ -37,7 +37,7 @@ int main() {
     // Main game loop
     while (true)
     {
-        hallway.move();
+        hallway.move(player);
 
         // Handle room entry based on player's choice
         switch (hallway.getChoice())
@@ -45,12 +45,12 @@ int main() {
             case '1':
                 system("cls"); 
                 player.set_location(COCKPIT);
-                cockpit.enter(copilot, engineRoom);
+                cockpit.enter(copilot, engineRoom, player);
                 break;
             case '2':
                 system("cls"); 
                 player.set_location(SLEEPING_QUARTERS);
-                sleepingQuarters.enter(copilot);
+                sleepingQuarters.enter(copilot, player);
                 break;
             case '3':
                 system("cls"); 
