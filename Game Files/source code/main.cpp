@@ -29,7 +29,7 @@ int main() {
 
     // Display welcome message and introduction
     cout << "Welcome to Disaster on Dysnomia!\n";
-    cout << readFromFile("introduction.txt");
+    cout << readFromFile("introduction.txt") << endl;
 
     // Start the game in the Medical Bay
     medicalBay.enter(copilot, player);
