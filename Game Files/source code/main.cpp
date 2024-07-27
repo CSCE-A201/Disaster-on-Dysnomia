@@ -28,8 +28,8 @@ int main() {
     srand(static_cast<unsigned int>(time(0))); // Seed the random number generator
 
     // Display welcome message and introduction
-    cout << "Welcome to the Untitled RPG game!\n";
-    cout << readFromFile("introduction.txt");
+    cout << "Welcome to Disaster on Dysnomia!\n";
+    cout << readFromFile("introduction.txt") << endl;
 
     // Start the game in the Medical Bay
     medicalBay.enter(copilot, player);
@@ -37,34 +37,34 @@ int main() {
     // Main game loop
     while (true)
     {
-        hallway.move(player);
+        hallway.move();
 
         // Handle room entry based on player's choice
         switch (hallway.getChoice())
         {
-            case 'A':
-            case 'a':
+            case '1':
                 system("cls"); 
-                cockpit.enter(copilot, engineRoom, player);
+                player.set_location(COCKPIT);
+                cockpit.enter(copilot, engineRoom);
                 break;
-            case 'B':
-            case 'b':
+            case '2':
                 system("cls"); 
-                sleepingQuarters.enter(copilot, player);
+                player.set_location(SLEEPING_QUARTERS);
+                sleepingQuarters.enter(copilot);
                 break;
-            case 'C':
-            case 'c':
+            case '3':
                 system("cls"); 
+                player.set_location(MEDICAL_BAY);
                 medicalBay.enter(copilot, player);
                 break;
-            case 'D':
-            case 'd':
+            case '4':
                 system("cls"); 
+                player.set_location(STORAGE);
                 storageRoom.enter(player, copilot);
                 break;
-            case 'E':
-            case 'e':
+            case '5':
                 system("cls"); 
+                player.set_location(ENGINE_ROOM);
                 engineRoom.enter(player);
                 break;
             default:

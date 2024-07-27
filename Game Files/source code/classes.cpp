@@ -143,16 +143,14 @@ class Hallway {
 	public:
 
         //output movement options for the player and get choice
-		void move(Player &player) {
-            player.set_location(HALLWAY);
-            map(player);
+		void move() {
             cout << endl;
             cout << "Choose an option:\n";
-            cout << "A. Go to Cockpit\n";
-            cout << "B. Go to Sleeping Quarters\n";
-            cout << "C. Go to Medical Bay\n";
-            cout << "D. Go to Storage Room\n";
-            cout << "E. Go to Engine Room\n";
+            cout << "1. Go to Cockpit\n";
+            cout << "2. Go to Sleeping Quarters\n";
+            cout << "3. Go to Medical Bay\n";
+            cout << "4. Go to Storage Room\n";
+            cout << "5. Go to Engine Room\n";
 
             cout << "\nWhere would you like to go?: ";
             choice = get_char();
@@ -188,9 +186,6 @@ public:
     // Function to handle entering the engine room
     void enter(Player &player) //added arguments as values from these classes should be checked
     {
-        player.set_location(ENGINE_ROOM);
-        map(player);
-
         cout << readFromFile("engineroom_entry.txt") << endl;
 
         char choice;
@@ -286,9 +281,7 @@ private:
 // Class for Sleeping Quarters - Jared
 class SleepingQuarters {
 public:
-    void enter(Copilot &copilot, Player &player) {
-        player.set_location(SLEEPING_QUARTERS);
-        map(player);
+    void enter(Copilot &copilot) {
         cout << readFromFile("sleeping_quarters_intro.txt") << endl;
 
         char choice;
@@ -374,7 +367,7 @@ private:
         } while (dialogChoice != '5'); // Continue until the player chooses to leave
     }
 
-    void handleDialogChoice(int choice) const {
+    void handleDialogChoice(char choice) const {
         switch (choice) {
             case '1':
                 cout << readFromFile("sq_dialog_ship.txt") << endl;
@@ -401,8 +394,6 @@ class MedicalBay
 public:
     void enter(Copilot &copilot, Player &player)
     {
-        player.set_location(MEDICAL_BAY);
-        map(player);
         cout << readFromFile("medical_bay.txt") << endl; // intro to medical bay
 
         char choice;
@@ -534,9 +525,6 @@ public:
             return;
         }
 
-        player.set_location(STORAGE);
-        map(player);
-
         if (!pirateEncountered)
         {
             cout << readFromFile("storageroom_entry.txt") << endl;
@@ -642,14 +630,11 @@ class Cockpit {
 public:
     Cockpit () : unlocked(false) {};
 
-    void enter(Copilot &copilot, EngineRoom &engineRoom, Player &player) {
+    void enter(Copilot &copilot, EngineRoom &engineRoom) {
         if (!copilot.obtained) { //copilot provides key for cockpit
             cout << endl << readFromFile("cockpitLocked.txt");
             return;
         } else {
-            player.set_location(COCKPIT);
-            map(player);
-            
             if (unlocked) {
                 cout << endl << readFromFile("enterCockpit.txt");
             } else {
