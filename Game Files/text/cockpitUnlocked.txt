@@ -2,7 +2,7 @@ You approach the cockpit door, now with your copilot by your side.
 Through the round window in the center, you can tell the main lights are out.
 You take the key from your pocket and insert it in the lock on the door.
 
-*Click* -- COCKPIT UNLOCKED --
+COCKPIT UNLOCKED
 
 You enter the cockpit.
 Now inside, you see numerous controls and a few dim, flashing lights.

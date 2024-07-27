@@ -1,4 +1,4 @@
 You approach the office desk, its surface cluttered with papers and small medical tools. 
 Several drawers are built into the desk, each potentially containing something useful. 
-One drawer in particular catches your eye. It has a lock and requires a 4-digit code to unlock it. 
+One drawer in particular catches your eye. It has a lock and requires a 4 digit code to unlock it. 
 The lock suggests that whatever is inside is valuable or important.
