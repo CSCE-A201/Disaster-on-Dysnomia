@@ -1,3 +1,6 @@
+#ifndef CLASSES_H
+#define CLASSES_H
+
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -722,3 +725,5 @@ private:
 
     bool unlocked = false;
 };
+
+#endif
