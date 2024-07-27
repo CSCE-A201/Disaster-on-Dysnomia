@@ -1,3 +1,6 @@
-The Medical Bay is filled with various medical equipment. Cabinets line one wall, potentially holding various medical supplies. 
-An office desk sits in the corner, cluttered with papers and small tools. Several pieces of equipment are scattered around, their screens dark and in poor condition. 
-The dim lighting casts long shadows, making the room feel eerie and quiet. You may need to navigate this area to find supplies.
+The Medical Bay is filled with various medical equipment. 
+Cabinets line one wall, potentially holding various medical supplies. 
+An office desk sits in the corner, cluttered with papers and small tools. 
+Several pieces of equipment are scattered around, their screens dark and in poor condition. 
+The dim lighting casts long shadows, making the room feel eerie and quiet. 
+You may need to navigate this area to find supplies.
