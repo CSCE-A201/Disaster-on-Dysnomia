@@ -5,7 +5,7 @@ Disaster on Dysnomia is a CLI text-based adventure game. You wake up on a ship i
 Download the game files folder
 - This folder includes the source code and an executable along with necessary text files
 
-Make sure the exe is in the same directory as the text folder
+Make sure the exe is in the same directory as the text folder.
 Run the exe and enjoy the game!
 
 ## Game Development
