@@ -1,7 +1,7 @@
 In front of you, you find the ships control board.
 Numerous buttons and switches cover the board.
-You can hear the humming of engine in background, main power has been restored to the ship.
+You can hear the humming of engine in background main power has been restored to the ship.
 You consult your copilot on what the buttons mean.
-He instructs you that the if you press the giant red button in the center of the board, the ship will start.
-Unfortunately in his current state, he cannot assist in piloting the ship.
+He instructs you that the if you press the giant red button in the center of the board the ship will start.
+Unfortunately in his current state he cannot assist in piloting the ship.
 You must find medical supplies to treat his wounds.
