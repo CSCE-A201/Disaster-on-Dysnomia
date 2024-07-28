@@ -31,6 +31,8 @@ int main() {
     cout << "Welcome to Disaster on Dysnomia!\n";
     cout << readFromFile("introduction.txt") << endl;
 
+    waitForKeyPress("Press enter to continue: ", true);
+
     // Start the game in the Medical Bay
     medicalBay.enter(copilot, player);
 
