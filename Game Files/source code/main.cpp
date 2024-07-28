@@ -28,8 +28,8 @@ int main() {
     srand(static_cast<unsigned int>(time(0))); // Seed the random number generator
 
     // Display welcome message and introduction
-    cout << "Welcome to Disaster on Dysnomia!\n";
-    cout << readFromFile("introduction.txt") << endl;
+    cout << "Welcome to Disaster on Dysnomia!" << endl;
+    cout << endl << readFromFile("introduction.txt") << endl;
 
     waitForKeyPress("Press enter to continue: ", true);
 

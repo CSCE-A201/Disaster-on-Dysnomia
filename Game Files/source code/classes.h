@@ -45,7 +45,7 @@ string readFromFile(const string& filename)
 
 // Function to wait for any key press
 // Pauses the game until the player presses a key
-// An optinal variable to add a prompt
+// An optional variable to add a prompt
 // An optional variable to clear the screen after key press
 void waitForKeyPress(string msg = "", bool clear = false)
 {
