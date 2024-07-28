@@ -41,9 +41,10 @@ Run the EXE and enjoy the game!
   - ALlows the player to move between rooms
 
 ### Functions
-- waitForKeyPress()
+- waitForKeyPress(string message = "", bool clear = false)
   - This functions allows the game to pause and the player to press a key to continue an action
   - Used for combat
+  - Has optional fields to clear the screen after key press and display a message before key press
 - getchar()
   - validates user input, allows only single characters to be read
 - map()
@@ -59,3 +60,4 @@ Game Features
 - Add weapons and more complex combat
 - Add more rooms
 - Add more characters
+- Use a GUI rather than the CLI
