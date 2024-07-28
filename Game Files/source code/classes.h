@@ -162,7 +162,7 @@ class Hallway {
             player.set_location(HALLWAY);
             map(player);
             cout << endl;
-            cout << "\nWhere would you like to go?: ";
+            cout << "\nWhere would you like to go?: \n";
             cout << "1. Go to Cockpit\n";
             cout << "2. Go to Sleeping Quarters\n";
             cout << "3. Go to Medical Bay\n";
