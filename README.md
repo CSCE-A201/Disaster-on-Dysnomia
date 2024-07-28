@@ -6,7 +6,18 @@ Download the game files folder
 - This folder includes the source code and an executable along with necessary text files
 
 Make sure the exe is in the same directory as the text folder.
-Run the exe and enjoy the game!
+Run the EXE and enjoy the game!
+
+### IF the EXE does not run
+- Try compiling yourself
+  - In the Open the Game Files folder
+  - Right-click inside the folder, select open in terminal
+  - In the terminal copy or type:
+    ```c++
+    g++ -o Dysnomia "source code/main.cpp"
+    ```
+  - You will now have an EXE in the Game Files folder labeled Dysnomia
+  - If it does not compile, check your installation of C++
 
 ## Game Development
 ### Classes
