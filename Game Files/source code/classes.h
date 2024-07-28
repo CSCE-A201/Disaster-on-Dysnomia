@@ -209,7 +209,7 @@ public:
         char choice;
         do {
             map(player);
-            cout << "Choose an option:\n";
+            cout << "You are in the engine room. What would you like to do:\n";
             cout << "1. Look at the engine\n";
             cout << "2. Leave the room\n";
             cout << "Enter your choice: ";
@@ -561,18 +561,10 @@ private:
 class StorageRoom
 {
 private:
-    bool status;
-    bool enemy;
     bool pirateEncountered; // Track if pirate has been encountered
 
 public:
-    StorageRoom() : status(false), enemy(true), pirateEncountered(false) {}
-
-    void setStatus(bool s) { status = s; }
-    bool getStatus() const { return status; }
-
-    void setEnemy(bool e) { enemy = e; }
-    bool getEnemy() const { return enemy; }
+    StorageRoom() : pirateEncountered(false) {}
 
     void enter(Player& player, Copilot& copilot)
     {
@@ -644,7 +636,7 @@ public:
 
             cout << endl;
 
-            if (total >= 25)
+            if (total > 32)
             {
                 cout << "You successfully defeated the pirate.\n";
             }
@@ -665,10 +657,9 @@ public:
 
         // After encounter options
         char choice;
-        do {
-            system("cls"); 
+        do { 
             map(player);
-            cout << "Choose an option:\n";
+            cout << "You are in the storage room. What would you like to do:\n";
             cout << "1. Search the room\n";
             cout << "2. Leave the room\n";
             cout << "Enter your choice: ";
