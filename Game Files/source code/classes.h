@@ -241,66 +241,60 @@ private:
 
         char choice;
         do {
-            cout << "\n"; // Add a blank line
-            cout << "Choose an option:\n";
-            cout << "1. Turn on the Engine\n";
-            cout << "2. Step Away from the engine\n";
-            cout << "Enter your choice: ";
-            choice = get_char();
-            cout << "\n"; // Add a blank line after input
-
-            switch (choice)
-            {
-            case '1':
-                if (!player.get_enginePiece())
-                {
-                    system("cls"); 
-                    cout << "\n"; // Add a blank line
-                    cout << readFromFile("engineroom_engineoff.txt") << endl;
-                }
-                else
-                {
-                    system("cls"); 
-                    cout << "\n"; // Add a blank line
-                    cout << readFromFile("engineroom_engineon.txt") << endl;
-                    on = true; // track that engine is on
-                    engineRunningOptions();
-                }
-                break;
-            case '2':
-                system("cls"); 
+            if (!on) {
                 cout << "\n"; // Add a blank line
-                cout << readFromFile("engineroom_stepaway.txt") << endl;
-                return;
-            default:
-                system("cls"); 
-                cout << "Invalid choice. Please try again.\n\n"; // Double newline for clarity
+                cout << "Choose an option:\n";
+                cout << "1. Turn on the Engine\n";
+                cout << "2. Step Away from the engine\n";
+                cout << "Enter your choice: ";
+                choice = get_char();
+                cout << "\n"; // Add a blank line after input
+                switch (choice)
+                {
+                case '1':
+                    if (!player.get_enginePiece())
+                    {
+                        system("cls"); 
+                        cout << "\n"; // Add a blank line
+                        cout << readFromFile("engineroom_engineoff.txt") << endl;
+                    }
+                    else
+                    {
+                        system("cls"); 
+                        cout << "\n"; // Add a blank line
+                        cout << readFromFile("engineroom_engineon.txt") << endl;
+                        on = true; // track that engine is on
+                        // engineRunningOptions();
+                    }
+                    break;
+                case '2':
+                    system("cls"); 
+                    cout << "\n"; // Add a blank line
+                    cout << readFromFile("engineroom_stepaway.txt") << endl;
+                    return;
+                default:
+                    system("cls"); 
+                    cout << "Invalid choice. Please try again.\n\n"; // Double newline for clarity
+                }
+            } else {
+                cout << "Choose an option:\n";
+                cout << "1. Step Away from the engine\n";
+                cout << "Enter your choice: ";
+                choice = get_char();
+                cout << "\n"; // Add a blank line after input
+
+                switch (choice)
+                {
+                case '1':
+                    system("cls"); 
+                    return;
+                default:
+                    system("cls"); 
+                    cout << "Invalid choice. Please try again.\n\n"; // Double newline for clarity
+                }
             }
-        } while (true);
-    }
 
-    // Function to handle options when the engine is running
-    void engineRunningOptions()
-    {
-        cout << readFromFile("engineroom_enginerunning.txt") << endl;
-
-        char choice;
-        do {
-            cout << "Choose an option:\n";
-            cout << "1. Step Away from the engine\n";
-            cout << "Enter your choice: ";
-            choice = get_char();
-            cout << "\n"; // Add a blank line after input
-
-            switch (choice)
-            {
-            case '1':
-                system("cls"); 
-                return;
-            default:
-                system("cls"); 
-                cout << "Invalid choice. Please try again.\n\n"; // Double newline for clarity
-            }
+            
         } while (true);
     }
 };
@@ -533,12 +527,17 @@ private:
             cout << "Enter 4-digit code to unlock the desk drawer: ";
             cin >> userCode;
 
-            if (userCode == deskCode)
+            if (userCode == deskCode && !player.hasCabinetKey())
             {
                 system("cls"); 
                 cout << readFromFile("mb_desk_unlock.txt") << endl;
                 player.setCabinetKey(true); // Player finds the cabinet key
             }
+            else if (userCode == deskCode && player.hasCabinetKey()) 
+            {
+                system("cls");
+                cout << "The desk unlocks again, but there is nothing left for you here.\n";
+            } 
             else
             {
                 system("cls"); 
