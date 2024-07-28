@@ -52,7 +52,7 @@ void waitForKeyPress(string msg = "", bool clear = false)
     if (msg != "") {
         cout << msg << endl;
     }
-    getch();
+    _getch();
 
     if (clear) {
         system("cls");
