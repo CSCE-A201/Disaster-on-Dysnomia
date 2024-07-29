@@ -3,21 +3,19 @@ Disaster on Dysnomia is a CLI text-based adventure game. You wake up on a ship i
 
 ## How to Play
 Download the game files folder
-- This folder includes the source code and an executable along with necessary text files
+- This folder includes the source code and the necessary text files
 
-Make sure the exe is in the same directory as the text folder.
-Run the EXE and enjoy the game!
-
-### IF the EXE does not run
-- Try compiling yourself
-  - In the Open the Game Files folder
-  - Right-click inside the folder, select open in terminal
+- Compile the code
+  - Open the Game Files folder
+  - Right-click inside the folder, select open in terminal if available
+      - If unavailable. open a terminal separately and navigate to the Game Files folder
   - In the terminal copy or type:
     ```c++
     g++ -o Dysnomia "source code/main.cpp"
     ```
   - You will now have an EXE in the Game Files folder labeled Dysnomia
   - If it does not compile, check your installation of C++
+  - [Here] (https://www.freecodecamp.org/news/how-to-install-c-and-cpp-compiler-on-windows/) is a link to a helpful guide on installing C++
 
 ## Game Development
 ### Classes
