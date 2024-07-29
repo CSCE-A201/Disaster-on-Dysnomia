@@ -15,7 +15,7 @@ Download the game files folder
     ```
   - You will now have an EXE in the Game Files folder labeled Dysnomia
   - If it does not compile, check your installation of C++
-  - [Here] (https://www.freecodecamp.org/news/how-to-install-c-and-cpp-compiler-on-windows/) is a link to a helpful guide on installing C++
+  - [Here](https://www.freecodecamp.org/news/how-to-install-c-and-cpp-compiler-on-windows/) is a link to a helpful guide on installing C++
 
 ## Game Development
 ### Classes
